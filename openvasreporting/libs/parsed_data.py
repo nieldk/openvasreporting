@@ -102,8 +102,8 @@ class Port(object):
         if not isinstance(result, str):
             raise TypeError("Expected basestring, got '{}' instead".format(type(result)))
 
-        regex_nr = re.search("([\d]+)(/)([\w]+)", info) # type: ignore
-        regex_general = re.search("(general)(/)([\w]+)", info) # type: ignore
+        regex_nr = re.search(r"([\d]+)(/)([\w]+)", info) # type: ignore
+        regex_general = re.search(r"(general)(/)([\w]+)", info) # type: ignore
 
         if regex_nr and len(regex_nr.groups()) == 3:
             number = int(regex_nr.group(1))
@@ -161,7 +161,12 @@ class ParseVulnerability:
         #
         # VULN_VERSION
         self.vuln_version = ""
-        desc:str = vuln.find("./description").text
+#        desc:str = vuln.find("./description").text
+        des = vuln.find("./description")
+        if des is not None:
+                desc:str = des.text
+        else:
+                desc:str = None
         if desc is None:
             desc = ""
         match = re.search(r'Installed version: ((\d|.)+)', desc)
